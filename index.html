@@ -760,14 +760,6 @@ function renderAdmin() {
     document.getElementById('adm-num-pedidos').innerText=pedidos.length;
     document.getElementById('adm-num-produtos').innerText=produtos.length;
     document.getElementById('adm-wa-num').value=localStorage.getItem('df_wa')||'';
-    const lp=document.getElementById('adm-lista-pedidos'); lp.innerHTML='';
-    [...pedidos].sort((a,b)=>b.timestamp-a.timestamp).forEach(p=>{
-        const s=p.status==='pronto'?'🟢':p.status==='entregue'?'✅':'🟡';
-        const clienteEsc=p.cliente.replace(/'/g,"\\'");
-        lp.innerHTML+=`<tr><td><b>#${p.id}</b></td><td>${p.cliente}</td><td>${p.pagamento}</td><td>R$ ${p.total.toFixed(2)}</td><td>${p.hora} ${s}</td>
-        <td><button onclick="solicitarExclusaoPedido('${p.firestoreId}',${p.id},'${clienteEsc}',${p.total},'${p.hora}')" class="btn btn-danger" style="padding:5px 10px;font-size:0.75rem;">🗑 Excluir</button></td></tr>`;
-    });
-    if(!pedidos.length) lp.innerHTML='<tr><td colspan="6" style="color:var(--muted);text-align:center;">Nenhum pedido ainda.</td></tr>';
     const lprod=document.getElementById('adm-lista-produtos'); lprod.innerHTML='';
     produtos.forEach(p=>{
         lprod.innerHTML+=`<tr><td>${p.nome}</td><td>${catNomes[p.cat]||p.cat}</td><td>R$ ${p.preco.toFixed(2)}</td><td>${p.promo==='sim'?'🔥 Sim':'—'}</td>
