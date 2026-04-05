@@ -1,7 +1,7 @@
 {
-  "name": "Restaurante Deus é Fiel",
-  "short_name": "Deus é Fiel",
-  "description": "Sistema de pedidos do Restaurante Deus é Fiel",
+  "name": "ME Restaurante",
+  "short_name": "Obrigado pela preferência",
+  "description": "Sistema de pedidos do ME Restaurante",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#1a1a2e",
