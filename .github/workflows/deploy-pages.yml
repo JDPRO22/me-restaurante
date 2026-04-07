@@ -1,0 +1,51 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Gerar js/config.js a partir de Secrets
+        run: |
+          mkdir -p js
+          cat > js/config.js <<'EOF'
+          window.APP_CONFIG = {
+            firebase: {
+              apiKey: ${{ toJson(secrets.FIREBASE_API_KEY) }},
+              authDomain: ${{ toJson(secrets.FIREBASE_AUTH_DOMAIN) }},
+              projectId: ${{ toJson(secrets.FIREBASE_PROJECT_ID) }},
+              storageBucket: ${{ toJson(secrets.FIREBASE_STORAGE_BUCKET) }},
+              messagingSenderId: ${{ toJson(secrets.FIREBASE_MESSAGING_SENDER_ID) }},
+              appId: ${{ toJson(secrets.FIREBASE_APP_ID) }}
+            },
+            secrets: {
+              adminPasswordDefault: ${{ toJson(secrets.ADMIN_PASSWORD_DEFAULT || '') }},
+              kitchenPasswordDefault: ${{ toJson(secrets.KITCHEN_PASSWORD_DEFAULT || '') }}
+            }
+          };
+          EOF
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
